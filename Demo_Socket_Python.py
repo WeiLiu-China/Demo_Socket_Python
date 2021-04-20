@@ -19,6 +19,7 @@ async def check_user_permit(websocket):
         recv_str = await websocket.recv()
         cred_dict = recv_str.split(":")
         if cred_dict[0] == "admin" and cred_dict[1] == "123456":
+            print("Password is ok...")
             response_str = "Congratulation, you have connect with server..."
             await websocket.send(response_str)
             print("Password is ok...")
@@ -34,7 +35,9 @@ async def recv_user_msg(websocket):
     while True:
         recv_text = await websocket.recv()
         print("recv_text:", websocket.pong, recv_text)
-        response_text = f"Server return: {recv_text}"
+        right=1100
+        left=1100
+        response_text = f"{right},{left}"
         print("response_text:", response_text)
         await websocket.send(response_text)
 
@@ -46,13 +49,13 @@ async def run(websocket, path):
             #  await check_user_permit(websocket)
             await recv_user_msg(websocket)
         except websockets.ConnectionClosed:
-            print("ConnectionClosed...", path)  # 链接断开
+            print("ConnectionClosed...", path)    # 链接断开
             print("websocket_users old:", websocket_users)
             websocket_users.remove(websocket)
             print("websocket_users new:", websocket_users)
             break
         except websockets.InvalidState:
-            print("InvalidState...")  # 无效状态
+            print("InvalidState...")    # 无效状态
             break
         except Exception as e:
             print("Exception:", e)
